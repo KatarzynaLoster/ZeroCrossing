@@ -10,6 +10,8 @@
 using namespace std;
 
 int main() {
-	cout << "ZeroCrossing App" << endl; // prints ZeroCrossing App
+	for (int i = 0; i< 5 ; i++) {
+		cout << "ZeroCrossing App" << endl; // prints ZeroCrossing App
+	}
 	return 0;
 }
