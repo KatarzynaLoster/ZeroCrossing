@@ -9,7 +9,8 @@
 #include <iostream>
 using namespace std;
 
-int main() {
+int main()
+{
 	int sequence[98];
 	cout
 			<< "This is the program which is counting the zero crossings in sequence of numbers in the range from -10 to 10\n"
@@ -17,10 +18,25 @@ int main() {
 			<< endl;
 	int i = 0;
 	sequence[0] = 0;
-	while (sequence[i] != 99) {
+	while (sequence[i] != 99)
+	{
 		cin >> sequence[i];
-		if (sequence[i] != 99) {
-			i++;
+		if (sequence[i] != 99)
+		{
+			i++ ;
+		}
+	}
+	i = 0 ;
+	while(sequence[i] != 99)
+	{
+		if(sequence[i] == 99 || (sequence[i] > -10 && sequence[i] < 10) )
+		{
+		i++ ;
+		}
+		else
+		{
+		cout << "There is error in number of the sequence\n " ;
+		break ;
 		}
 	}
 
