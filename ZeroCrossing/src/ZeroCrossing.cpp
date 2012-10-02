@@ -9,7 +9,6 @@
 #include <iostream>
 using namespace std;
 
-
 void readNumbersIntoTable(int sequence[98])
 {
 	cout
@@ -27,7 +26,8 @@ void readNumbersIntoTable(int sequence[98])
 	}
 }
 
-void validateNumbers(int sequence[98]) {
+void validateNumbers(int sequence[98])
+{
 	int i = 0;
 	while (sequence[i] != 99)
 	{
@@ -43,10 +43,34 @@ void validateNumbers(int sequence[98]) {
 	}
 }
 
+void searchingZeroCrossing(int sequence[98])
+{
+	int i = 0;
+	int number_zero = 0;
+	while (sequence[i + 1] != 99)
+	{
+		if ((sequence[i] > 0) && (sequence[i + 1] < 0))
+		{
+			number_zero++;
+		}
+		if ((sequence[i] < 0) && (sequence[i + 1] > 0))
+		{
+			number_zero++;
+		}
+		if (sequence[i + 2] == 99)
+		{
+			cout << "number of the zero crossing is: " << number_zero;
+			break;
+		}
+		i++;
+	}
+}
+
 int main()
 {
 	int sequence[98];
 	readNumbersIntoTable(sequence);
 	validateNumbers(sequence);
+	searchingZeroCrossing(sequence);
 	return 0;
 }
