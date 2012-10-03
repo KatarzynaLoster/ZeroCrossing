@@ -31,7 +31,7 @@ void validateNumbers(int sequence[98])
 	int i = 0;
 	while (sequence[i] != 99)
 	{
-		if (sequence[i] == 99 || (sequence[i] > -10 && sequence[i] < 10))
+		if ((sequence[i] > -10) && (sequence[i] < 10))
 		{
 			i++;
 		}
@@ -43,12 +43,41 @@ void validateNumbers(int sequence[98])
 	}
 }
 
+int skipZero(int sequence[98], int i)
+{
+	while ((sequence[i] == 0) || (sequence[i + 1] != 99))
+	{
+		if ((sequence[i + 1] != 99) && (sequence[i] != 0))
+		{
+			break;
+		}
+		else
+		{
+			i++;
+		}
+	}
+	return i;
+}
+
 void searchingZeroCrossing(int sequence[98])
 {
 	int i = 0;
 	int number_zero = 0;
+	int *pointerToNo0Number = &number_zero;
 	while (sequence[i + 1] != 99)
 	{
+		i = skipZero(sequence, i);
+		if (sequence[i - 1] == 0)
+		{
+			if ((*pointerToNo0Number > 0) && (sequence[i] < 0))
+			{
+				number_zero++;
+			}
+			if ((*pointerToNo0Number < 0) && (sequence[i] > 0))
+			{
+				number_zero++;
+			}
+		}
 		if ((sequence[i] > 0) && (sequence[i + 1] < 0))
 		{
 			number_zero++;
@@ -57,11 +86,13 @@ void searchingZeroCrossing(int sequence[98])
 		{
 			number_zero++;
 		}
-		if (sequence[i + 2] == 99)
+		if ((sequence[i + 2] == 99) || (sequence[i + 1] == 99)
+				|| (sequence[i] == 99))
 		{
 			cout << "number of the zero crossing is: " << number_zero;
 			break;
 		}
+		pointerToNo0Number = &sequence[i];
 		i++;
 	}
 }
