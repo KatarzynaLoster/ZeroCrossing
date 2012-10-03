@@ -12,7 +12,9 @@ using namespace std;
 void readNumbersIntoTable(int sequence[98])
 {
 	cout
-			<< "This is the program which is counting the zero crossings in sequence of numbers in the range from -10 to 10\nEnter numbers between -10 and 10 less than 100. End sequence  of the number '99'. "
+			<< "This is the program which is counting the zero crossings in sequence of numbers in the range from -10 to 10\n"
+					<<"Enter numbers between -10 and 10 less than 100. End sequence  of the number '99'.\n"
+					<<"Number of the zero crossing should be range of from 5 to 8 "
 			<< endl;
 	int i = 0;
 	sequence[0] = 0;
@@ -37,7 +39,7 @@ void validateNumbers(int sequence[98])
 		}
 		else
 		{
-			cout << "There is error in number of the sequence\n ";
+			cout << "There is error in number of the sequence!\n ";
 			break;
 		}
 	}
@@ -59,6 +61,36 @@ int skipZero(int sequence[98], int i)
 	return i;
 }
 
+int searchingZeroCrossingBeyond0(int sequence[98], int i, int number_zero,
+		int* pointerToNo0Number)
+{
+	if (sequence[i - 1] == 0)
+	{
+		if ((*pointerToNo0Number > 0) && (sequence[i] < 0))
+		{
+			number_zero++;
+		}
+		if ((*pointerToNo0Number < 0) && (sequence[i] > 0))
+		{
+			number_zero++;
+		}
+	}
+	return number_zero;
+}
+
+int countingZeroCrossing(int sequence[98], int i, int number_zero)
+{
+	if ((sequence[i] > 0) && (sequence[i + 1] < 0))
+	{
+		number_zero++;
+	}
+	if ((sequence[i] < 0) && (sequence[i + 1] > 0))
+	{
+		number_zero++;
+	}
+	return number_zero;
+}
+
 void searchingZeroCrossing(int sequence[98])
 {
 	int i = 0;
@@ -67,29 +99,17 @@ void searchingZeroCrossing(int sequence[98])
 	while (sequence[i + 1] != 99)
 	{
 		i = skipZero(sequence, i);
-		if (sequence[i - 1] == 0)
-		{
-			if ((*pointerToNo0Number > 0) && (sequence[i] < 0))
-			{
-				number_zero++;
-			}
-			if ((*pointerToNo0Number < 0) && (sequence[i] > 0))
-			{
-				number_zero++;
-			}
-		}
-		if ((sequence[i] > 0) && (sequence[i + 1] < 0))
-		{
-			number_zero++;
-		}
-		if ((sequence[i] < 0) && (sequence[i + 1] > 0))
-		{
-			number_zero++;
-		}
+		number_zero = searchingZeroCrossingBeyond0(sequence, i, number_zero,
+				pointerToNo0Number);
+		number_zero = countingZeroCrossing(sequence, i, number_zero);
 		if ((sequence[i + 2] == 99) || (sequence[i + 1] == 99)
 				|| (sequence[i] == 99))
 		{
-			cout << "number of the zero crossing is: " << number_zero;
+			cout << "number of the zero crossing is: " << number_zero  << endl;
+			if ( (number_zero < 5) || (number_zero > 8))
+			{
+				cout << "Error: Number of the zero crossing is incorrect!" ;
+			}
 			break;
 		}
 		pointerToNo0Number = &sequence[i];
