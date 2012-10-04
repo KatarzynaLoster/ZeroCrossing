@@ -45,65 +45,30 @@ void validateNumbers(int sequence[98])
 	}
 }
 
-int skipZero(int sequence[98], int i)
-{
-	while ((sequence[i] == 0) || (sequence[i + 1] != 99))
-	{
-		if ((sequence[i + 1] != 99) && (sequence[i] != 0))
-		{
-			break;
-		}
-		else
-		{
-			i++;
-		}
-	}
-	return i;
-}
 
-int searchingZeroCrossingBeyond0(int sequence[98], int i, int number_zero,
-		int* pointerToNo0Number)
+int countingZeroCrossing(int sequence2[98], int i, int number_zero)
 {
-	if (sequence[i - 1] == 0)
-	{
-		if ((*pointerToNo0Number > 0) && (sequence[i] < 0))
-		{
-			number_zero++;
-		}
-		if ((*pointerToNo0Number < 0) && (sequence[i] > 0))
-		{
-			number_zero++;
-		}
-	}
-	return number_zero;
-}
-
-int countingZeroCrossing(int sequence[98], int i, int number_zero)
-{
-	if ((sequence[i] > 0) && (sequence[i + 1] < 0))
+	if ((sequence2[i] > 0) && (sequence2[i + 1] < 0))
 	{
 		number_zero++;
 	}
-	if ((sequence[i] < 0) && (sequence[i + 1] > 0))
+	if ((sequence2[i] < 0) && (sequence2[i + 1] > 0))
 	{
 		number_zero++;
 	}
 	return number_zero;
 }
 
-void searchingZeroCrossing(int sequence[98])
+void searchingZeroCrossing(int sequence2[98])
 {
 	int i = 0;
 	int number_zero = 0;
-	int *pointerToNo0Number = &number_zero;
-	while (sequence[i + 1] != 99)
+	while (sequence2[i + 1] != 99)
 	{
-		i = skipZero(sequence, i);
-		number_zero = searchingZeroCrossingBeyond0(sequence, i, number_zero,
-				pointerToNo0Number);
-		number_zero = countingZeroCrossing(sequence, i, number_zero);
-		if ((sequence[i + 2] == 99) || (sequence[i + 1] == 99)
-				|| (sequence[i] == 99))
+
+		number_zero = countingZeroCrossing(sequence2, i, number_zero);
+		if ((sequence2[i + 2] == 99) || (sequence2[i + 1] == 99)
+				|| (sequence2[i] == 99))
 		{
 			cout << "number of the zero crossing is: " << number_zero  << endl;
 			if ( (number_zero < 5) || (number_zero > 8))
@@ -112,16 +77,41 @@ void searchingZeroCrossing(int sequence[98])
 			}
 			break;
 		}
-		pointerToNo0Number = &sequence[i];
 		i++;
+	}
+}
+
+void rewritingNumbersFromSequenceToSequence2(int sequence2[98],
+		int sequence[98])
+{
+	int i = 0;
+	int j = 0;
+	sequence2[0] = 0;
+	while (sequence2[j] != 99)
+	{
+		if (sequence[i] != 0)
+		{
+			sequence2[j] = sequence[i];
+			if (sequence2[j] != 99)
+			{
+				j++;
+				i++;
+			}
+		}
+		if (sequence[i] == 0)
+		{
+			i++;
+		}
 	}
 }
 
 int main()
 {
 	int sequence[98];
+	int sequence2[98];
 	readNumbersIntoTable(sequence);
 	validateNumbers(sequence);
-	searchingZeroCrossing(sequence);
+	rewritingNumbersFromSequenceToSequence2(sequence2, sequence);
+	searchingZeroCrossing(sequence2);
 	return 0;
 }
