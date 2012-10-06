@@ -26,8 +26,9 @@ void readNumbersIntoTable(int sequence[98])
 	}
 }
 
-void validateNumbers(int sequence[98])
+bool validateNumbers(int sequence[98])
 {
+	bool isNumbersValid = true;
 	int i = 0;
 	while (sequence[i] != 99)
 	{
@@ -38,9 +39,11 @@ void validateNumbers(int sequence[98])
 		else
 		{
 			cout << "There is error in number of the sequence!\n ";
+			isNumbersValid = false;
 			break;
 		}
 	}
+	return isNumbersValid;
 }
 
 int countingZeroCrossing(int sequence2[98], int i, int number_zero)
@@ -70,7 +73,8 @@ void searchingZeroCrossing(int sequence2[98])
 			cout << "number of the zero crossing is: " << number_zero << endl;
 			if ((number_zero < 5) || (number_zero > 8))
 			{
-				cout << "Error: Number of the zero crossing is incorrect!" << endl;
+				cout << "Error: Number of the zero crossing is incorrect!"
+						<< endl;
 			}
 			break;
 		}
@@ -148,7 +152,6 @@ void definitionOfTheProgramAndSelectSource(int & select)
 			<< endl;
 	cout << "Select the data source:\n" << "file txt - write '1';\n"
 			<< "manual data entry - write '2'.\n";
-	cin >> select;
 }
 
 int countExtremesInRestNumbers(int sequence2[98], int i, int number_extremes)
@@ -198,30 +201,73 @@ void searchingAllExtremes(int sequence2[98])
 	}
 }
 
+void taskChoice(int select, int sequence2[98])
+{
+	cout
+			<< "What you want to do?\nCounting zero crossing - write 1\nCounting extremes - write 2\n";
+	while (true)
+	{
+		cin >> select;
+		if (select == 1)
+		{
+			searchingZeroCrossing(sequence2);
+			break;
+		}
+		if (select == 2)
+		{
+			searchingAllExtremes(sequence2);
+			break;
+		}
+		if ((select != 1) && (select != 2))
+		{
+			cout << "Error: selection mistake!\n Write correct number:\n";
+		}
+	}
+}
+
+bool sourceChoice(int select, int sequence[98])
+{
+	bool isSequenceValid = false;
+	while (true)
+	{
+		cin >> select;
+		if (select == 1)
+		{
+			isSequenceValid = readNumbersFromFile(sequence);
+			break;
+		}
+		if (select == 2)
+		{
+			readManualData(sequence);
+			isSequenceValid = true;
+			break;
+		}
+		if ((select != 1) && (select != 2))
+		{
+			cout << "Error: selection mistake.\n Write correct number:\n";
+		}
+	}
+	return isSequenceValid;
+}
+
 int main()
 {
 	bool isSequenceValid = false;
 	int sequence[98];
+
 	int sequence2[98];
 	int select;
 	definitionOfTheProgramAndSelectSource(select);
-	if (select == 1)
-	{
-		isSequenceValid = readNumbersFromFile(sequence);
-	}
-	if (select == 2)
-	{
-		readManualData(sequence);
-		isSequenceValid = true;
-	}
+	isSequenceValid = sourceChoice(select, sequence);
 	if (isSequenceValid)
 	{
-		validateNumbers(sequence);
+		bool isNumbersValid = true;
+		isNumbersValid = validateNumbers(sequence);
+		if (isNumbersValid)
+		{
 		rewritingNumbersFromSequenceToSequence2(sequence2, sequence);
-
-		searchingZeroCrossing(sequence2);
-
-		searchingAllExtremes(sequence2);
+		taskChoice(select, sequence2);
+		}
 	}
-return 0;
+	return 0;
 }
