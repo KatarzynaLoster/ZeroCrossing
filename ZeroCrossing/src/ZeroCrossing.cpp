@@ -70,7 +70,7 @@ void searchingZeroCrossing(int sequence2[98])
 			cout << "number of the zero crossing is: " << number_zero << endl;
 			if ((number_zero < 5) || (number_zero > 8))
 			{
-				cout << "Error: Number of the zero crossing is incorrect!";
+				cout << "Error: Number of the zero crossing is incorrect!" << endl;
 			}
 			break;
 		}
@@ -151,6 +151,53 @@ void definitionOfTheProgramAndSelectSource(int & select)
 	cin >> select;
 }
 
+int countExtremesInRestNumbers(int sequence2[98], int i, int number_extremes)
+{
+	if ((sequence2[i] > 0) && (sequence2[i + 1] < sequence2[i])
+			&& (sequence2[i] > sequence2[i - 1]))
+	{
+		number_extremes++;
+	}
+	if ((sequence2[i] < 0) && (sequence2[i + 1] > sequence2[i])
+			&& (sequence2[i] < sequence2[i - 1]))
+	{
+		number_extremes++;
+	}
+	return number_extremes;
+}
+
+int countExtremesInFirstNumber(int sequence2[98], int number_extremes)
+{
+	if ((sequence2[0] > 0) && (sequence2[0]) > sequence2[1])
+	{
+		number_extremes++;
+	}
+	if ((sequence2[0] < 0) && (sequence2[0]) < sequence2[1])
+	{
+		number_extremes++;
+	}
+	return number_extremes;
+}
+
+void searchingAllExtremes(int sequence2[98])
+{
+	int i = 1;
+	int number_extremes = 0;
+	number_extremes = countExtremesInFirstNumber(sequence2, number_extremes);
+	while (sequence2[i + 1] != 99)
+	{
+		number_extremes = countExtremesInRestNumbers(sequence2, i,
+				number_extremes);
+		if ((sequence2[i + 2] == 99) || (sequence2[i + 1] == 99)
+				|| (sequence2[i] == 99))
+		{
+			cout << "number of the extremes is: " << number_extremes << endl;
+			break;
+		}
+		i++;
+	}
+}
+
 int main()
 {
 	bool isSequenceValid = false;
@@ -171,7 +218,10 @@ int main()
 	{
 		validateNumbers(sequence);
 		rewritingNumbersFromSequenceToSequence2(sequence2, sequence);
+
 		searchingZeroCrossing(sequence2);
+
+		searchingAllExtremes(sequence2);
 	}
-	return 0;
+return 0;
 }
