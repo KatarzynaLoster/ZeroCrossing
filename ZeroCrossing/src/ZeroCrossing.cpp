@@ -102,58 +102,50 @@ void rewritingNumbersFromSequenceToSequence2(int sequence2[98],
 	}
 }
 
-bool readNumbersFromFile(int select, int sequence[98], bool isSequenceValid)
+bool readNumbersFromFile(int sequence[98])
 {
-	if (select == 1)
+	bool isSequenceValid = false;
+	string fileName;
+	int i = 0;
+	cout << "Enter the file name from Desktop: " << endl;
+	cin >> fileName;
+	string str;
+	ifstream infile;
+	infile.open(("C:\\Users\\kasia\\Desktop\\" + fileName + ".txt").c_str());
+	if (infile.is_open())
 	{
-		string fileName;
-		int i = 0;
-		cout << "Enter the file name from Desktop: " << endl;
-		cin >> fileName;
-		string str;
-		ifstream infile;
-		infile.open(
-				("C:\\Users\\kasia\\Desktop\\" + fileName + ".txt").c_str());
-		if (infile.is_open())
+		getline(infile, str);
+		stringstream ss(str);
+		while (ss)
 		{
-			getline(infile, str);
-			stringstream ss(str);
-			while (ss)
+			ss >> sequence[i];
+			if (sequence[i] != 99)
 			{
-				ss >> sequence[i];
-				if (sequence[i] != 99)
-				{
-					i++;
-				}
+				i++;
 			}
-			isSequenceValid = true;
 		}
-		else
-		{
-			cout << "File doesn't exist!\n";
-		}
+		isSequenceValid = true;
+	}
+	else
+	{
+		cout << "File doesn't exist!\n";
 	}
 	return isSequenceValid;
 }
 
-bool readManualData(int select, int sequence[98], bool isSequenceValid)
+void readManualData(int sequence[98])
 {
-	if (select == 2)
-	{
-		cout << "Enter numbers manual:\n";
-		readNumbersIntoTable(sequence);
-		isSequenceValid = true;
-	}
-	return isSequenceValid;
+	cout << "Enter numbers manual:\n";
+	readNumbersIntoTable(sequence);
 }
 
 void definitionOfTheProgramAndSelectSource(int & select)
 {
 	cout
-				<< "This is the program which is counting the zero crossings or extremes in sequence of numbers in the range from -10 to 10\n"
-				<< "Enter numbers between -10 and 10 less than 100. End sequence  of the number '99'.\n"
-				<< "Number of the zero crossing should be range of from 5 to 8 "
-				<< endl;
+			<< "This is the program which is counting the zero crossings or extremes in sequence of numbers in the range from -10 to 10\n"
+			<< "Enter numbers between -10 and 10 less than 100. End sequence  of the number '99'.\n"
+			<< "Number of the zero crossing should be range of from 5 to 8 "
+			<< endl;
 	cout << "Select the data source:\n" << "file txt - write '1';\n"
 			<< "manual data entry - write '2'.\n";
 	cin >> select;
@@ -166,13 +158,20 @@ int main()
 	int sequence2[98];
 	int select;
 	definitionOfTheProgramAndSelectSource(select);
-	isSequenceValid = readNumbersFromFile(select, sequence, isSequenceValid);
-	isSequenceValid = readManualData(select, sequence, isSequenceValid);
+	if (select == 1)
+	{
+		isSequenceValid = readNumbersFromFile(sequence);
+	}
+	if (select == 2)
+	{
+		readManualData(sequence);
+		isSequenceValid = true;
+	}
 	if (isSequenceValid)
 	{
 		validateNumbers(sequence);
 		rewritingNumbersFromSequenceToSequence2(sequence2, sequence);
 		searchingZeroCrossing(sequence2);
-		return 0;
 	}
+	return 0;
 }
