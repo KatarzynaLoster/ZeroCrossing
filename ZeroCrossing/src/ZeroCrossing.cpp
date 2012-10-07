@@ -12,36 +12,50 @@
 #include <sstream>
 using namespace std;
 
-void readNumbersIntoTable(int sequence[98])
+void readNumbersIntoTable(int sequence[98][98], const int k)
 {
 	int i = 0;
-	sequence[0] = 0;
-	while (sequence[i] != 99)
+	sequence[k][0] = 0;
+	while (sequence[k][i] != 99)
 	{
-		cin >> sequence[i];
-		if (sequence[i] != 99)
+		cin >> sequence[k][i];
+		if (sequence[k][i] == 100)
+		{
+			break;
+		}
+		if (sequence[k][i] != 99)
 		{
 			i++;
 		}
 	}
 }
 
-bool validateNumbers(int sequence[98])
+bool validateNumbers(int sequence[98][98])
 {
 	bool isNumbersValid = true;
 	int i = 0;
-	while (sequence[i] != 99)
+	int k = 0;
+	while (sequence[k][i] != 100)
 	{
-		if ((sequence[i] > -10) && (sequence[i] < 10))
+		while (sequence[k][i] != 99)
 		{
-			i++;
+			if ((sequence[k][i] > -10) && (sequence[k][i] < 10))
+			{
+				i++;
+			}
+			else
+			{
+				cout << "There is error in number of the sequence!\n ";
+				isNumbersValid = false;
+				break;
+			}
 		}
-		else
+		if (sequence[k][0] == 100)
 		{
-			cout << "There is error in number of the sequence!\n ";
-			isNumbersValid = false;
 			break;
 		}
+		k++;
+		i = 0;
 	}
 	return isNumbersValid;
 }
@@ -83,34 +97,35 @@ void searchingZeroCrossing(int sequence2[98])
 }
 
 void rewritingNumbersFromSequenceToSequence2(int sequence2[98],
-		int sequence[98])
+		int sequence[98][98], const int k)
 {
 	int i = 0;
 	int j = 0;
 	sequence2[0] = 0;
 	while (sequence2[j] != 99)
 	{
-		if (sequence[i] != 0)
+		if (sequence[k][i] != 0)
 		{
-			sequence2[j] = sequence[i];
+			sequence2[j] = sequence[k][i];
 			if (sequence2[j] != 99)
 			{
 				j++;
 				i++;
 			}
 		}
-		if (sequence[i] == 0)
+		if (sequence[k][i] == 0)
 		{
 			i++;
 		}
 	}
 }
 
-bool readNumbersFromFile(int sequence[98])
+bool readNumbersFromFile(int sequence[98][98])
 {
 	bool isSequenceValid = false;
 	string fileName;
 	int i = 0;
+	int k = 0;
 	cout << "Enter the file name from Desktop: " << endl;
 	cin >> fileName;
 	string str;
@@ -119,14 +134,30 @@ bool readNumbersFromFile(int sequence[98])
 	if (infile.is_open())
 	{
 		getline(infile, str);
-		stringstream ss(str);
-		while (ss)
+		while (infile)
 		{
-			ss >> sequence[i];
-			if (sequence[i] != 99)
+			stringstream ss(str);
+			while (ss)
 			{
-				i++;
+				int tmp;
+				ss >> tmp;
+				sequence[k][i] = tmp;
+				if (sequence[k][i] != 99)
+				{
+					i++;
+				}
+				if ((sequence[k][0] == 100))
+				{
+					break;
+				}
 			}
+			if (sequence[k][0] == 100)
+			{
+				break;
+			}
+			k++;
+			i = 0;
+			getline(infile, str);
 		}
 		isSequenceValid = true;
 	}
@@ -137,17 +168,26 @@ bool readNumbersFromFile(int sequence[98])
 	return isSequenceValid;
 }
 
-void readManualData(int sequence[98])
+void readManualData(int sequence[98][98], int k)
 {
 	cout << "Enter numbers manual:\n";
-	readNumbersIntoTable(sequence);
+	while (sequence[k][0] != 100)
+	{
+		readNumbersIntoTable(sequence, k);
+		if (sequence[k][0] == 100)
+		{
+			break;
+		}
+		k++;
+	}
 }
 
 void definitionOfTheProgramAndSelectSource(int & select)
 {
 	cout
 			<< "This is the program which is counting the zero crossings or extremes in sequence of numbers in the range from -10 to 10\n"
-			<< "Enter numbers between -10 and 10 less than 100. End sequence  of the number '99'.\n"
+			<< "Enter numbers between -10 and 10 less than 100. End sequence of the numbers '99'.\n"
+				"There is possibility enter many sequences. To end entry sequences write '100' in next line.\n"
 			<< "Number of the zero crossing should be range of from 5 to 8 "
 			<< endl;
 	cout << "Select the data source:\n" << "file txt - write '1';\n"
@@ -201,8 +241,10 @@ void searchingAllExtremes(int sequence2[98])
 	}
 }
 
-void taskChoice(int select, int sequence2[98])
+void taskChoice(int select, int sequence[98][98])
 {
+	int sequence2[98];
+	int k = 0;
 	cout
 			<< "What you want to do?\nCounting zero crossing - write 1\nCounting extremes - write 2\n";
 	while (true)
@@ -210,12 +252,24 @@ void taskChoice(int select, int sequence2[98])
 		cin >> select;
 		if (select == 1)
 		{
-			searchingZeroCrossing(sequence2);
+			while (sequence[k][0] != 100)
+			{
+				rewritingNumbersFromSequenceToSequence2(sequence2, sequence, k);
+				cout << "Line" << k << endl;
+				searchingZeroCrossing(sequence2);
+				k++;
+			}
 			break;
 		}
 		if (select == 2)
 		{
-			searchingAllExtremes(sequence2);
+			while (sequence[k][0] != 100)
+			{
+				rewritingNumbersFromSequenceToSequence2(sequence2, sequence, k);
+				cout << "Line" << k << endl;
+				searchingAllExtremes(sequence2);
+				k++;
+			}
 			break;
 		}
 		if ((select != 1) && (select != 2))
@@ -225,7 +279,7 @@ void taskChoice(int select, int sequence2[98])
 	}
 }
 
-bool sourceChoice(int select, int sequence[98])
+bool sourceChoice(int select, int sequence[98][98])
 {
 	bool isSequenceValid = false;
 	while (true)
@@ -238,7 +292,8 @@ bool sourceChoice(int select, int sequence[98])
 		}
 		if (select == 2)
 		{
-			readManualData(sequence);
+			int k = 0;
+			readManualData(sequence, k);
 			isSequenceValid = true;
 			break;
 		}
@@ -253,9 +308,7 @@ bool sourceChoice(int select, int sequence[98])
 int main()
 {
 	bool isSequenceValid = false;
-	int sequence[98];
-
-	int sequence2[98];
+	int sequence[98][98];
 	int select;
 	definitionOfTheProgramAndSelectSource(select);
 	isSequenceValid = sourceChoice(select, sequence);
@@ -265,8 +318,7 @@ int main()
 		isNumbersValid = validateNumbers(sequence);
 		if (isNumbersValid)
 		{
-		rewritingNumbersFromSequenceToSequence2(sequence2, sequence);
-		taskChoice(select, sequence2);
+			taskChoice(select, sequence);
 		}
 	}
 	return 0;
