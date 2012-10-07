@@ -144,9 +144,7 @@ void readNumbersFromFile(int sequence[98][98])
 		stringstream ss(str);
 		while (ss)
 		{
-			int tmp;
-			ss >> tmp;
-			sequence[k][i] = tmp;
+			ss >> sequence[k][i];
 			if (sequence[k][i] != 99)
 			{
 				i++;
