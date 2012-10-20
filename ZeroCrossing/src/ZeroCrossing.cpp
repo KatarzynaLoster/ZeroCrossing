@@ -12,13 +12,25 @@
 #include <sstream>
 using namespace std;
 
-void readNumbersIntoTable(int sequence[98][98], const int k)
+bool readNumbersIntoTable(int sequence[98][98], const int k)
 {
+	bool datatest = true;
 	int i = 0;
 	sequence[k][0] = 0;
 	while (sequence[k][i] != 99)
 	{
-		cin >> sequence[k][i];
+		try
+		{
+			cin.exceptions(istream::badbit | istream::failbit);
+			cin >> sequence[k][i];
+		} catch (istream::failure &)
+		{
+			cin.clear();
+			cout << "There is incorrect data in line: " << k + 1
+					<< ", position: " << i + 1 << endl;
+			datatest = false;
+			break;
+		}
 		if (sequence[k][i] == 100)
 		{
 			break;
@@ -28,6 +40,7 @@ void readNumbersIntoTable(int sequence[98][98], const int k)
 			i++;
 		}
 	}
+	return datatest;
 }
 
 bool validateNumbers(int sequence[98][98])
@@ -120,8 +133,9 @@ void rewritingNumbersFromSequenceToSequence2(int sequence2[98],
 	}
 }
 
-void readNumbersFromFile(int sequence[98][98])
+bool readNumbersFromFile(int sequence[98][98])
 {
+	bool datatest = true;
 	string fileName;
 	int i = 0;
 	int k = 0;
@@ -144,7 +158,21 @@ void readNumbersFromFile(int sequence[98][98])
 		stringstream ss(str);
 		while (ss)
 		{
-			ss >> sequence[k][i];
+			try
+			{
+				ss.exceptions(istream::badbit | istream::failbit);
+				ss >> sequence[k][i];
+			} catch (istream::failure &)
+			{
+				if (ss.eof())
+					break;
+				ss.clear();
+				cout << "Wrong data in line: " << k + 1 << " position: "
+						<< i + 1 << endl;
+				datatest = false;
+				break;
+			}
+
 			if (sequence[k][i] != 99)
 			{
 				i++;
@@ -162,20 +190,25 @@ void readNumbersFromFile(int sequence[98][98])
 		i = 0;
 		getline(infile, str);
 	}
+	return datatest;
 }
 
-void readManualData(int sequence[98][98], int k)
+bool readManualData(int sequence[98][98], int k)
 {
+	bool datatest = true;
 	cout << "Enter numbers manual:\n";
 	while (sequence[k][0] != 100)
 	{
-		readNumbersIntoTable(sequence, k);
+		datatest = readNumbersIntoTable(sequence, k);
+		if (datatest == false)
+			break;
 		if (sequence[k][0] == 100)
 		{
 			break;
 		}
 		k++;
 	}
+	return datatest;
 }
 
 void definitionOfTheProgramAndSelectSource(int & select)
@@ -243,8 +276,7 @@ void searchingAllExtremes(int sequence[98][98], int k)
 	int i = 1;
 	int number_extremes = 0;
 	number_extremes = countExtremesInFirstNumber(sequence, number_extremes, k);
-	while ((sequence[k][0] != 99)
-			&& (sequence[k][i] != 99))
+	while ((sequence[k][0] != 99) && (sequence[k][i] != 99))
 	{
 		number_extremes = countExtremesInRestNumbers(sequence, i,
 				number_extremes, k);
@@ -266,13 +298,24 @@ void taskChoice(int select, int sequence[98][98])
 			<< "What you want to do?\nCounting zero crossing - write 1\nCounting extremes - write 2\n";
 	while (true)
 	{
-		cin >> select;
+		try
+		{
+			cin.exceptions(istream::badbit | istream::failbit);
+			cin >> select;
+		} catch (istream::failure &)
+		{
+			cin.clear();
+			string wrongSelection;
+			cin >> wrongSelection;
+			cout << "Wrong selection! Write correct number: \n" << endl;
+		}
+
 		if (select == 1)
 		{
 			while (sequence[k][0] != 100)
 			{
 				rewritingNumbersFromSequenceToSequence2(sequence2, sequence, k);
-				cout << "Line " << k << endl;
+				cout << "Line " << k + 1 << endl;
 				searchingZeroCrossing(sequence2);
 				k++;
 			}
@@ -282,7 +325,7 @@ void taskChoice(int select, int sequence[98][98])
 		{
 			while (sequence[k][0] != 100)
 			{
-				cout << "Line " << k << endl;
+				cout << "Line " << k + 1 << endl;
 				searchingAllExtremes(sequence, k);
 				k++;
 			}
@@ -295,20 +338,31 @@ void taskChoice(int select, int sequence[98][98])
 	}
 }
 
-void sourceChoice(int select, int sequence[98][98])
+bool sourceChoice(int select, int sequence[98][98])
 {
+	bool datatest = true;
 	while (true)
 	{
-		cin >> select;
+		try
+		{
+			cin.exceptions(istream::badbit | istream::failbit);
+			cin >> select;
+		} catch (istream::failure &)
+		{
+			cin.clear();
+			string wrongSelection;
+			cin >> wrongSelection;
+			cout << "Wrong selection! Write correct number: \n" << endl;
+		}
 		if (select == 1)
 		{
-			readNumbersFromFile(sequence);
+			datatest = readNumbersFromFile(sequence);
 			break;
 		}
 		if (select == 2)
 		{
 			int k = 0;
-			readManualData(sequence, k);
+			datatest = readManualData(sequence, k);
 			break;
 		}
 		if ((select != 1) && (select != 2))
@@ -316,6 +370,7 @@ void sourceChoice(int select, int sequence[98][98])
 			cout << "Error: selection mistake.\n Write correct number:\n";
 		}
 	}
+	return datatest;
 }
 
 int main()
@@ -323,12 +378,15 @@ int main()
 	int sequence[98][98];
 	int select;
 	definitionOfTheProgramAndSelectSource(select);
-	sourceChoice(select, sequence);
-	bool isNumbersValid = true;
-	isNumbersValid = validateNumbers(sequence);
-	if (isNumbersValid)
+	bool datatest = sourceChoice(select, sequence);
+	if (datatest)
 	{
-		taskChoice(select, sequence);
+		bool isNumbersValid = true;
+		isNumbersValid = validateNumbers(sequence);
+		if (isNumbersValid)
+		{
+			taskChoice(select, sequence);
+		}
 	}
 	return 0;
 }
