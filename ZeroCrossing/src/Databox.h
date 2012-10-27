@@ -23,6 +23,7 @@ public:
 	bool readNumbersFromFile(int sequence[98][98]);
 	bool readManualData(int sequence[98][98], int k);
 	bool readNumbersIntoTable(int sequence[98][98], const int k);
+	string readNameAndOpenFile(ifstream & infile);
 
 
 	virtual ~Databox();

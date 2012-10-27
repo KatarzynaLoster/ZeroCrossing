@@ -33,7 +33,9 @@ bool Databox::sourceChoice(int select, int sequence[98][98])
 			string wrongSelection;
 			cin >> wrongSelection;
 			cout << "Wrong selection! Write correct number: \n" << endl;
+			continue;
 		}
+
 		if (select == 1)
 		{
 			datatest = readNumbersFromFile(sequence);
@@ -69,6 +71,16 @@ bool Databox::readManualData(int sequence[98][98], int k)
 	}
 	return datatest;
 }
+
+string Databox::readNameAndOpenFile(ifstream & infile)
+{
+	string fileName;
+	cout << "Enter the file name from Desktop: " << endl;
+	cin >> fileName;
+	infile.open(("C:\\Users\\kasia\\Desktop\\" + fileName + ".txt").c_str());
+	return fileName;
+}
+
 bool Databox::readNumbersFromFile(int sequence[98][98])
 {
 	bool datatest = true;
@@ -77,16 +89,11 @@ bool Databox::readNumbersFromFile(int sequence[98][98])
 	int k = 0;
 	string str;
 	ifstream infile;
-	cout << "Enter the file name from Desktop: " << endl;
-	cin >> fileName;
-	infile.open(("C:\\Users\\kasia\\Desktop\\" + fileName + ".txt").c_str());
+	fileName = readNameAndOpenFile(infile);
 	while (!infile.is_open())
 	{
 		cout << "File doesn't exist!\n";
-		cout << "Enter the file name from Desktop: " << endl;
-		cin >> fileName;
-		infile.open(
-				("C:\\Users\\kasia\\Desktop\\" + fileName + ".txt").c_str());
+		fileName = readNameAndOpenFile(infile);
 	}
 	getline(infile, str);
 	while (infile)
