@@ -17,6 +17,14 @@ Sequence::~Sequence()
 {
 	// TODO Auto-generated destructor stub
 }
+void Sequence::addNumber(int number)
+{
+	singleSequence.push_back(number);
+}
+int Sequence::countNumbers()
+{
+	return singleSequence.size();
+}
 
 bool Sequence::validateNumbers(int sequence[98][98])
 {
@@ -84,8 +92,8 @@ void Sequence::searchingZeroCrossing(int sequence2[98])
 	}
 }
 
-int Sequence::countExtremesInRestNumbers(int sequence[98][98], int i, int number_extremes,
-		int k)
+int Sequence::countExtremesInRestNumbers(int sequence[98][98], int i,
+		int number_extremes, int k)
 {
 	if ((sequence[k][i] > 0) && (sequence[k][i + 1] < sequence[k][i])
 			&& (sequence[k][i] > sequence[k][i - 1])
@@ -112,7 +120,8 @@ int Sequence::countExtremesInRestNumbers(int sequence[98][98], int i, int number
 	return number_extremes;
 }
 
-int Sequence::countExtremesInFirstNumber(int sequence[98][98], int number_extremes, int k)
+int Sequence::countExtremesInFirstNumber(int sequence[98][98],
+		int number_extremes, int k)
 {
 	if (sequence[k][0] != 99)
 	{

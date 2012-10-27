@@ -16,6 +16,8 @@ class Sequence
 public:
 	vector<int> singleSequence;
 	Sequence();
+	void addNumber (int number);
+	int countNumbers ();
 	void searchingAllExtremes(int sequence[98][98], int k);
 	int countExtremesInFirstNumber(int sequence[98][98], int number_extremes, int k);
 	int countExtremesInRestNumbers(int sequence[98][98], int i, int number_extremes, int k);

@@ -7,7 +7,7 @@
 
 #include "Databox.h"
 
-Databox::Databox()
+Databox::Databox() : continueReadingData(false)
 {
 	// TODO Auto-generated constructor stub
 
@@ -17,7 +17,6 @@ Databox::~Databox()
 {
 	// TODO Auto-generated destructor stub
 }
-
 bool Databox::sourceChoice(int select, int sequence[98][98])
 {
 	bool datatest = true;
@@ -43,8 +42,7 @@ bool Databox::sourceChoice(int select, int sequence[98][98])
 		}
 		if (select == 2)
 		{
-			int k = 0;
-			datatest = readManualData(sequence, k);
+			datatest = readManualData();
 			break;
 		}
 		if ((select != 1) && (select != 2))
@@ -54,20 +52,16 @@ bool Databox::sourceChoice(int select, int sequence[98][98])
 	}
 	return datatest;
 }
-bool Databox::readManualData(int sequence[98][98], int k)
+bool Databox::readManualData()
 {
+	continueReadingData = true;
 	bool datatest = true;
 	cout << "Enter numbers manual:\n";
-	while (sequence[k][0] != 100)
+	while (continueReadingData)
 	{
-		datatest = readNumbersIntoTable(sequence, k);
+		datatest = readNumbersIntoTable();
 		if (datatest == false)
 			break;
-		if (sequence[k][0] == 100)
-		{
-			break;
-		}
-		k++;
 	}
 	return datatest;
 }
@@ -135,34 +129,35 @@ bool Databox::readNumbersFromFile(int sequence[98][98])
 	}
 	return datatest;
 }
-bool Databox::readNumbersIntoTable(int sequence[98][98], const int k)
+bool Databox::readNumbersIntoTable()
 {
 	bool datatest = true;
-	int i = 0;
-	sequence[k][0] = 0;
-	while (sequence[k][i] != 99)
+	Sequence series;
+	while (true)
 	{
+		int singleNumber;
 		try
 		{
 			cin.exceptions(istream::badbit | istream::failbit);
-			cin >> sequence[k][i];
+			cin >> singleNumber;
+			if (singleNumber == 99) break;
+			if (singleNumber == 100)
+				{
+				continueReadingData = false;
+				break;
+				}
+			series.addNumber(singleNumber);
 		} catch (istream::failure &)
 		{
 			cin.clear();
-			cout << "There is incorrect data in line: " << k + 1
-					<< ", position: " << i + 1 << endl;
+			cout << "There is incorrect data in line: " << sequences.size() + 1
+					<< ", position: " << series.countNumbers() + 1 << endl;
 			datatest = false;
 			break;
 		}
-		if (sequence[k][i] == 100)
-		{
-			break;
-		}
-		if (sequence[k][i] != 99)
-		{
-			i++;
-		}
+
 	}
+	sequences.push_back(series);
 	return datatest;
 }
 
