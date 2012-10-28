@@ -21,11 +21,15 @@ class Databox
 public:
 	vector<Sequence> sequences;
 	Databox();
-	bool sourceChoice(int select, int sequence[98][98]);
-	bool readNumbersFromFile(int sequence[98][98]);
+	bool sourceChoice(int select);
+	bool readNumbersFromFile();
 	bool readManualData();
 	bool readNumbersIntoTable();
+	bool validateDataSingleSequence();
+	void zeroCrossingFunction();
+	void extremesFunction();
 	string readNameAndOpenFile(ifstream & infile);
+	bool validateAllData();
 
 
 	virtual ~Databox();

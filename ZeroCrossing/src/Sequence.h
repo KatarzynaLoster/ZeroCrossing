@@ -9,6 +9,7 @@
 #define SEQUENCE_H_
 #include <vector>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 class Sequence
@@ -18,14 +19,18 @@ public:
 	Sequence();
 	void addNumber (int number);
 	int countNumbers ();
-	void searchingAllExtremes(int sequence[98][98], int k);
-	int countExtremesInFirstNumber(int sequence[98][98], int number_extremes, int k);
-	int countExtremesInRestNumbers(int sequence[98][98], int i, int number_extremes, int k);
-			void searchingZeroCrossing(int sequence2[98]);
-	int countingZeroCrossing(int sequence2[98], int i, int number_zero);
-	bool validateNumbers(int sequence[98][98]);
+	void searchingAllExtremes();
+	int countExtremesInFirstNumber(int number_extremes);
+	int countExtremesInRestNumbers(int number_extremes, vector<int>::iterator it);
+	void searchingZeroCrossing();
+	int countingZeroCrossing(int number_zero, vector<int>::iterator it);
+	void removingZero();
+	bool validateNumbers();
 
 	virtual ~Sequence();
+
+private:
+	void removingZero(vector<int>::iterator& it);
 };
 
 #endif /* SEQUENCE_H_ */

@@ -15,36 +15,6 @@
 using namespace std;
 
 
-
-
-
-void rewritingNumbersFromSequenceToSequence2(int sequence2[98],
-		int sequence[98][98], const int k)
-{
-	int i = 0;
-	int j = 0;
-	sequence2[0] = 0;
-	while (sequence2[j] != 99)
-	{
-		if (sequence[k][i] != 0)
-		{
-			sequence2[j] = sequence[k][i];
-			if (sequence2[j] != 99)
-			{
-				j++;
-				i++;
-			}
-		}
-		if (sequence[k][i] == 0)
-		{
-			i++;
-		}
-	}
-}
-
-
-
-
 void definitionOfTheProgramAndSelectSource(int & select)
 {
 	cout
@@ -57,10 +27,8 @@ void definitionOfTheProgramAndSelectSource(int & select)
 			<< "manual data entry - write '2'.\n";
 }
 
-void taskChoice(int select, int sequence[98][98], Sequence task)
+void taskChoice(int select, Databox container)
 {
-	int sequence2[98];
-	int k = 0;
 	cout
 			<< "What you want to do?\nCounting zero crossing - write 1\nCounting extremes - write 2\n";
 	while (true)
@@ -80,23 +48,12 @@ void taskChoice(int select, int sequence[98][98], Sequence task)
 
 		if (select == 1)
 		{
-			while (sequence[k][0] != 100)
-			{
-				rewritingNumbersFromSequenceToSequence2(sequence2, sequence, k);
-				cout << "Line " << k + 1 << endl;
-				task.searchingZeroCrossing(sequence2);
-				k++;
-			}
+				container.zeroCrossingFunction();
 			break;
 		}
 		if (select == 2)
 		{
-			while (sequence[k][0] != 100)
-			{
-				cout << "Line " << k + 1 << endl;
-				task.searchingAllExtremes(sequence, k);
-				k++;
-			}
+				container.extremesFunction();
 			break;
 		}
 		if ((select != 1) && (select != 2))
@@ -111,18 +68,16 @@ void taskChoice(int select, int sequence[98][98], Sequence task)
 int main()
 {
 	Databox container;
-	Sequence task;
-	int sequence[98][98];
 	int select;
 	definitionOfTheProgramAndSelectSource(select);
-	bool datatest = container.sourceChoice(select, sequence);
+	bool datatest = container.sourceChoice(select);
 	if (datatest)
 	{
 		bool isNumbersValid = true;
-		isNumbersValid = task.validateNumbers(sequence);
+		isNumbersValid = container.validateAllData();
 		if (isNumbersValid)
 		{
-			taskChoice(select, sequence, task);
+			taskChoice(select, container);
 		}
 	}
 	return 0;

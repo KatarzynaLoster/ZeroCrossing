@@ -7,7 +7,8 @@
 
 #include "Databox.h"
 
-Databox::Databox() : continueReadingData(false)
+Databox::Databox() :
+		continueReadingData(false)
 {
 	// TODO Auto-generated constructor stub
 
@@ -17,7 +18,43 @@ Databox::~Databox()
 {
 	// TODO Auto-generated destructor stub
 }
-bool Databox::sourceChoice(int select, int sequence[98][98])
+bool Databox::validateDataSingleSequence()
+{
+	Sequence series;
+	return series.validateNumbers();
+}
+bool Databox::validateAllData()
+{
+	bool isNumbersValid = true;
+	vector<Sequence>::iterator it = sequences.begin();
+	for (; it != sequences.end(); it++)
+	{
+		isNumbersValid = validateDataSingleSequence();
+	}
+	return isNumbersValid;
+}
+
+void Databox::zeroCrossingFunction()
+{
+	vector<Sequence>::iterator it = sequences.begin();
+	for (; it != sequences.end(); it++)
+	{
+		Sequence series;
+		series.searchingZeroCrossing();
+		cout << "Line:" << sequences.size() << endl;
+	}
+}
+void Databox::extremesFunction()
+{
+	vector<Sequence>::iterator it = sequences.begin();
+	for (; it != sequences.end(); it++)
+	{
+		Sequence series;
+		series.searchingAllExtremes();
+		cout << "Line:" << sequences.size() << endl;
+	}
+}
+bool Databox::sourceChoice(int select)
 {
 	bool datatest = true;
 	while (true)
@@ -37,7 +74,7 @@ bool Databox::sourceChoice(int select, int sequence[98][98])
 
 		if (select == 1)
 		{
-			datatest = readNumbersFromFile(sequence);
+			datatest = readNumbersFromFile();
 			break;
 		}
 		if (select == 2)
@@ -75,12 +112,11 @@ string Databox::readNameAndOpenFile(ifstream & infile)
 	return fileName;
 }
 
-bool Databox::readNumbersFromFile(int sequence[98][98])
+bool Databox::readNumbersFromFile()
 {
 	bool datatest = true;
+	Sequence series;
 	string fileName;
-	int i = 0;
-	int k = 0;
 	string str;
 	ifstream infile;
 	fileName = readNameAndOpenFile(infile);
@@ -95,36 +131,35 @@ bool Databox::readNumbersFromFile(int sequence[98][98])
 		stringstream ss(str);
 		while (ss)
 		{
+			int singleNumber;
 			try
 			{
 				ss.exceptions(istream::badbit | istream::failbit);
-				ss >> sequence[k][i];
+				ss >> singleNumber;
+				if (singleNumber == 99)
+					break;
+				if (singleNumber == 100)
+				{
+					break;
+				}
+				series.addNumber(singleNumber);
 			} catch (istream::failure &)
 			{
 				if (ss.eof())
 					break;
 				ss.clear();
-				cout << "Wrong data in line: " << k + 1 << " position: "
-						<< i + 1 << endl;
+				cout << "There is incorrect data in line: "
+						<< sequences.size() + 1 << ", position: "
+						<< series.countNumbers() + 1 << endl;
 				datatest = false;
 				break;
 			}
-
-			if (sequence[k][i] != 99)
-			{
-				i++;
-			}
-			if ((sequence[k][0] == 100))
-			{
-				break;
-			}
 		}
-		if (sequence[k][0] == 100)
+		if (series.countNumbers() == 0)
 		{
 			break;
 		}
-		k++;
-		i = 0;
+		sequences.push_back(series);
 		getline(infile, str);
 	}
 	return datatest;
@@ -140,12 +175,13 @@ bool Databox::readNumbersIntoTable()
 		{
 			cin.exceptions(istream::badbit | istream::failbit);
 			cin >> singleNumber;
-			if (singleNumber == 99) break;
+			if (singleNumber == 99)
+				break;
 			if (singleNumber == 100)
-				{
+			{
 				continueReadingData = false;
 				break;
-				}
+			}
 			series.addNumber(singleNumber);
 		} catch (istream::failure &)
 		{
