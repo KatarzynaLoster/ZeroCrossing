@@ -18,6 +18,10 @@ using namespace std;
 class Databox
 {
 	bool continueReadingData;
+
+	bool writingNumberIntoSeries(bool datatest, stringstream& ss);
+	Sequence writeNumbersIntoSeries(bool& datatest, stringstream& ss);
+
 public:
 	vector<Sequence> sequences;
 	Databox();
@@ -25,7 +29,7 @@ public:
 	bool readNumbersFromFile();
 	bool readManualData();
 	bool readNumbersIntoTable();
-	bool validateDataSingleSequence();
+	bool validateDataSingleSequence(Sequence series);
 	void zeroCrossingFunction();
 	void extremesFunction();
 	string readNameAndOpenFile(ifstream & infile);

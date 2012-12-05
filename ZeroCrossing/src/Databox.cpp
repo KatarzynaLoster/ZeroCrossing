@@ -18,9 +18,8 @@ Databox::~Databox()
 {
 	// TODO Auto-generated destructor stub
 }
-bool Databox::validateDataSingleSequence()
+bool Databox::validateDataSingleSequence(Sequence series)
 {
-	Sequence series;
 	return series.validateNumbers();
 }
 bool Databox::validateAllData()
@@ -29,29 +28,35 @@ bool Databox::validateAllData()
 	vector<Sequence>::iterator it = sequences.begin();
 	for (; it != sequences.end(); it++)
 	{
-		isNumbersValid = validateDataSingleSequence();
+		Sequence series = *it;
+		isNumbersValid = validateDataSingleSequence(series);
+		if (!isNumbersValid) break;
 	}
 	return isNumbersValid;
 }
 
 void Databox::zeroCrossingFunction()
 {
+	int i = 1;
 	vector<Sequence>::iterator it = sequences.begin();
 	for (; it != sequences.end(); it++)
 	{
-		Sequence series;
+		Sequence series = *it;
+		cout << "Line:" << i << endl;
 		series.searchingZeroCrossing();
-		cout << "Line:" << sequences.size() << endl;
+		i++;
 	}
 }
 void Databox::extremesFunction()
 {
+	int i = 1;
 	vector<Sequence>::iterator it = sequences.begin();
 	for (; it != sequences.end(); it++)
 	{
-		Sequence series;
+		Sequence series = *it;
+		cout << "Line:" << i << endl;
 		series.searchingAllExtremes();
-		cout << "Line:" << sequences.size() << endl;
+		i++;
 	}
 }
 bool Databox::sourceChoice(int select)
@@ -112,6 +117,39 @@ string Databox::readNameAndOpenFile(ifstream & infile)
 	return fileName;
 }
 
+Sequence Databox::writeNumbersIntoSeries(bool& datatest, stringstream& ss)
+{
+	Sequence series;
+	while (ss)
+	{
+		int singleNumber;
+		try
+		{
+			ss.exceptions(istream::badbit | istream::failbit);
+			ss >> singleNumber;
+			if (singleNumber == 99)
+				break;
+
+			if (singleNumber == 100)
+			{
+				break;
+			}
+			series.addNumber(singleNumber);
+		} catch (istream::failure&)
+		{
+			if (ss.eof())
+				break;
+
+			ss.clear();
+			cout << "There is incorrect data in line: " << sequences.size() + 1
+					<< ", position: " << series.countNumbers() + 1 << endl;
+			datatest = false;
+			break;
+		}
+	}
+	return series;
+}
+
 bool Databox::readNumbersFromFile()
 {
 	bool datatest = true;
@@ -129,32 +167,7 @@ bool Databox::readNumbersFromFile()
 	while (infile)
 	{
 		stringstream ss(str);
-		while (ss)
-		{
-			int singleNumber;
-			try
-			{
-				ss.exceptions(istream::badbit | istream::failbit);
-				ss >> singleNumber;
-				if (singleNumber == 99)
-					break;
-				if (singleNumber == 100)
-				{
-					break;
-				}
-				series.addNumber(singleNumber);
-			} catch (istream::failure &)
-			{
-				if (ss.eof())
-					break;
-				ss.clear();
-				cout << "There is incorrect data in line: "
-						<< sequences.size() + 1 << ", position: "
-						<< series.countNumbers() + 1 << endl;
-				datatest = false;
-				break;
-			}
-		}
+		series = writeNumbersIntoSeries(datatest, ss);
 		if (series.countNumbers() == 0)
 		{
 			break;

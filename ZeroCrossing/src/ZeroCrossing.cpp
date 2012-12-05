@@ -14,14 +14,12 @@
 #include "Sequence.h"
 using namespace std;
 
-
 void definitionOfTheProgramAndSelectSource(int & select)
 {
 	cout
 			<< "This is the program which is counting the zero crossings or extremes in sequence of numbers in the range from -10 to 10\n"
 			<< "Enter numbers between -10 and 10 less than 100. End sequence of the numbers '99'.\n"
 					"There is possibility enter many sequences. To end entry sequences write '100' in next line.\n"
-			<< "Number of the zero crossing should be range of from 5 to 8 "
 			<< endl;
 	cout << "Select the data source:\n" << "file txt - write '1';\n"
 			<< "manual data entry - write '2'.\n";
@@ -48,12 +46,12 @@ void taskChoice(int select, Databox container)
 
 		if (select == 1)
 		{
-				container.zeroCrossingFunction();
+			container.zeroCrossingFunction();
 			break;
 		}
 		if (select == 2)
 		{
-				container.extremesFunction();
+			container.extremesFunction();
 			break;
 		}
 		if ((select != 1) && (select != 2))
@@ -62,8 +60,6 @@ void taskChoice(int select, Databox container)
 		}
 	}
 }
-
-
 
 int main()
 {

@@ -17,7 +17,7 @@ Sequence::~Sequence()
 {
 	// TODO Auto-generated destructor stub
 }
-void Sequence::addNumber(int number)
+void Sequence::addNumber(int &number)
 {
 	singleSequence.push_back(number);
 }
@@ -49,13 +49,13 @@ bool Sequence::validateNumbers()
 
 int Sequence::countingZeroCrossing(int number_zero, vector<int>::iterator it)
 {
-	if ((it + 1) != singleSequence.end())
+	if ((it +1) != singleSequence.end())
 	{
-		if ((*it > 0) && ((*it + 1) < 0))
+		if ((*it > 0) && (*(it + 1) < 0))
 		{
 			number_zero++;
 		}
-		if ((*it < 0) && ((*it + 1) > 0))
+		if ((*it < 0) && (*(it + 1) > 0))
 		{
 			number_zero++;
 		}
@@ -84,10 +84,15 @@ void Sequence::searchingZeroCrossing()
 }
 
 int Sequence::countExtremesInRestNumbers(int number_extremes,
-		vector<int>::iterator it)
+		vector<int>::iterator & it)
 {
-	if ((*it > 0) && (*(it + 1) < *it) && (*it > *(it - 1))
-			&& ((it + 1) != singleSequence.end()))
+	bool itBiggerThan0 = ( (*it) > 0);
+	bool itBiggerThanNextElement = (*(it + 1) < *it) ;
+	bool itBiggerThanPreviousElement = (*it > *(it - 1));
+	bool isLastElement = ((it + 1) != singleSequence.end());
+
+
+	if (itBiggerThan0 && itBiggerThanNextElement && itBiggerThanPreviousElement	&& isLastElement )
 	{
 		number_extremes++;
 	}
@@ -110,13 +115,13 @@ int Sequence::countExtremesInRestNumbers(int number_extremes,
 int Sequence::countExtremesInFirstNumber(int number_extremes)
 {
 	vector<int>::iterator it = singleSequence.begin();
-	if (it != singleSequence.end())
+	if ((it != singleSequence.end()) && ((it +1) != singleSequence.end()))
 	{
 		if ((*it > 0) && (*it > *(it + 1)))
 		{
 			number_extremes++;
 		}
-		if ((*it < 0) && (*it < *(it + 1)))
+		else if ((*it < 0) && (*it < *(it + 1)))
 		{
 			number_extremes++;
 		}
